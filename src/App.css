@@ -1,5 +1,22 @@
 /* App.css - Custom styles for Olama Setif */
 
+/* Ensure full width layout */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
 /* Smooth scrolling for the entire document */
 html {
   scroll-behavior: smooth;

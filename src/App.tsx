@@ -1,21 +1,18 @@
-import { lazy, Suspense } from "react";
 import { Toaster } from "react-hot-toast";
 import LoadingScreen from "./components/LoadingScreen";
 import { useAppLoading } from "./hooks/useAppLoading";
 
-import "./App.css";
+// Import components directly to avoid layout issues
+import Header from "./components/Header";
+import Hero from "./components/Hero";
+import GazaSituationSection from "./components/GazaSituationSection";
+import DonationSection from "./components/DonationSection";
+import AboutSection from "./components/AboutSection";
+import ImpactSection from "./components/ImpactSection";
+import ContactSection from "./components/ContactSection";
+import Footer from "./components/Footer";
 
-// Lazy load components
-const Header = lazy(() => import("./components/Header"));
-const Hero = lazy(() => import("./components/Hero"));
-const GazaSituationSection = lazy(
-  () => import("./components/GazaSituationSection")
-);
-const DonationSection = lazy(() => import("./components/DonationSection"));
-const AboutSection = lazy(() => import("./components/AboutSection"));
-const ImpactSection = lazy(() => import("./components/ImpactSection"));
-const ContactSection = lazy(() => import("./components/ContactSection"));
-const Footer = lazy(() => import("./components/Footer"));
+import "./App.css";
 
 function App() {
   const { isLoading } = useAppLoading();
@@ -26,7 +23,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-gray-50 overflow-x-hidden">
       <Toaster
         position="top-center"
         toastOptions={{
@@ -37,7 +34,7 @@ function App() {
           },
         }}
       />
-      <Suspense fallback={<LoadingScreen />}>
+      <div className="w-full">
         <Header />
         <Hero />
         <GazaSituationSection />
@@ -46,7 +43,7 @@ function App() {
         <ImpactSection />
         <ContactSection />
         <Footer />
-      </Suspense>
+      </div>
     </div>
   );
 }
