@@ -20,7 +20,7 @@ const DonationSection: React.FC = () => {
   const { executeRecaptcha } = useRecaptcha();
 
   const predefinedAmounts = [
-    500, 1000, 2000, 5000, 8000, 10000, 20000, 40000, 50000,
+    500, 1000, 2000, 5000, 8000, 10000, 20000, 50000, 100000,
   ];
 
   // Initialize Chargily client
