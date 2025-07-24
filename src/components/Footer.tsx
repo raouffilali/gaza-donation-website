@@ -224,7 +224,15 @@ const Footer: React.FC = () => {
                   target="_blank"
                   href="https://www.linkedin.com/in/abderraouf-filali/"
                 >
-                  Abderraouf FILALI
+                  Abderraouf FILALI x
+                </a>
+                <a
+                  href="https://www.esaboura.com/"
+                  className="hover:text-rose-500 hover:underline"
+                  target="_blank"
+                >
+                  {" "}
+                  Esaboura
                 </a>
                 . All support to our brothers and sisters in Gaza 🇵🇸
               </p>

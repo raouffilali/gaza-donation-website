@@ -248,19 +248,19 @@ const DonationSection: React.FC = () => {
               {/* Predefined Amounts */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
                 {predefinedAmounts.map((amount) => (
-                  <motion.button
+                    <motion.button
                     key={amount}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleAmountSelect(amount)}
                     className={`p-3 rounded-xl font-semibold transition-all ${
                       selectedAmount === amount
-                        ? "bg-rose-500 text-white shadow-lg"
-                        : "bg-white/20 text-white hover:bg-white/30"
+                      ? "bg-rose-500 text-white shadow-lg"
+                      : "bg-white/20 text-white hover:bg-white/30"
                     }`}
-                  >
-                    {amount} دج
-                  </motion.button>
+                    >
+                    {amount.toLocaleString()} دج
+                    </motion.button>
                 ))}
               </div>
 
@@ -419,7 +419,7 @@ const DonationSection: React.FC = () => {
                 ) : (
                   <>
                     <Heart className="h-5 w-5" fill="currentColor" />
-                    <span>تبرع {getCurrentAmount() || 0} دج</span>
+                    <span>تبرع {getCurrentAmount().toLocaleString() || 0} دج</span>
                   </>
                 )}
               </motion.button>
