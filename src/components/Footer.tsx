@@ -214,6 +214,22 @@ const Footer: React.FC = () => {
               <p className="text-gray-500 text-xs">
                 المدفوعات مؤمنة بواسطة • شريك الدفع, جميع التبرعات محفوظة
               </p>
+              <p className="text-gray-500 text-xs">
+                Developed with 💚 by{" "}
+                <a
+                  className="hover:text-rose-500 hover:underline"
+                  target="_blank"
+                  href="https://www.linkedin.com/in/abderraouf-filali/"
+                >
+                  Abderraouf FILALI
+                </a>
+                . All support to our brothers and sisters in Gaza 🇵🇸
+              </p>
+                <p className="text-green-400 text-xs mt-4 italic">
+                "إِنَّمَا يُوَفَّى الصَّابِرُونَ أَجْرَهُم بِغَيْرِ حِسَابٍ"
+                <br />
+                <span className="not-italic">- سورة الزمر, 10</span>
+                </p>
             </div>
           </motion.div>
         </div>
