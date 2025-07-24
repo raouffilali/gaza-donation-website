@@ -36,7 +36,7 @@ const Header: React.FC = () => {
           <div className="flex items-center space-x-2 space-x-reverse">
             <Heart className="h-8 w-8 text-rose-500" fill="currentColor" />
             <span className="text-2xl font-bold text-gray-800">
-              Oulama <span className="text-rose-500">Mouslimin19</span>
+              جمعية العلماء  <span className="text-rose-500">سطيف</span>
             </span>
           </div>
 

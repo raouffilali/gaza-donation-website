@@ -156,7 +156,10 @@ const Footer: React.FC = () => {
                 <div className="flex items-center space-x-3 space-x-reverse">
                   <Phone className="h-5 w-5 text-rose-500" />
                   <span className="text-gray-300" dir="ltr">
-                    036 66 90 11
+                    036 66 90 11{" "}
+                  </span>
+                  <span className="text-gray-300" dir="ltr">
+                    0673 90 51 00 /
                   </span>
                 </div>
                 <div className="flex items-center space-x-3 space-x-reverse">
@@ -204,7 +207,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-400 hover:text-rose-500 transition-colors"
                 >
-                  شروط الخدمة 
+                  شروط الخدمة
                 </a>
               </div>
             </div>
@@ -225,11 +228,11 @@ const Footer: React.FC = () => {
                 </a>
                 . All support to our brothers and sisters in Gaza 🇵🇸
               </p>
-                <p className="text-green-400 text-xs mt-4 italic">
+              <p className="text-green-400 text-xs mt-4 italic">
                 "إِنَّمَا يُوَفَّى الصَّابِرُونَ أَجْرَهُم بِغَيْرِ حِسَابٍ"
                 <br />
                 <span className="not-italic">- سورة الزمر, 10</span>
-                </p>
+              </p>
             </div>
           </motion.div>
         </div>
