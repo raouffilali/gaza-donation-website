@@ -14,6 +14,9 @@ const DonationSection: React.FC = () => {
     phone: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [donationType, setDonationType] = useState<
+    "anonymous" | "with-credentials" | null
+  >(null);
   const { executeRecaptcha } = useRecaptcha();
 
   const predefinedAmounts = [
@@ -58,8 +61,13 @@ const DonationSection: React.FC = () => {
       return;
     }
 
-    if (!donorInfo.name || !donorInfo.email) {
-      toast.error("يرجى ملء الاسم والبريد الإلكتروني");
+    if (!donationType) {
+      toast.error("يرجى اختيار نوع التبرع (مجهول أو بالبيانات)");
+      return;
+    }
+
+    if (donationType === "with-credentials" && !donorInfo.name) {
+      toast.error("يرجى ملء الاسم");
       return;
     }
 
@@ -69,22 +77,45 @@ const DonationSection: React.FC = () => {
       // Execute reCAPTCHA before processing donation
       const recaptchaToken = await executeRecaptcha("donation");
 
-      // Create customer
-      const customer = await client.createCustomer({
-        name: donorInfo.name,
-        email: donorInfo.email,
-        phone: donorInfo.phone || undefined,
-        address: {
-          country: "DZ",
-          state: "Gaza",
-          address: "Palestine",
-        },
-        metadata: {
-          donation_type: "gaza_support",
-          source: "website",
-          recaptcha_token: recaptchaToken,
-        },
-      });
+      // Create customer with appropriate data based on donation type
+      const customerData =
+        donationType === "anonymous"
+          ? {
+              name: "متبرع مجهول",
+              email: `anonymous_${Date.now()}@oulama19-foundation.online`,
+              address: {
+                country: "DZ",
+                state: "Gaza",
+                address: "Palestine",
+              },
+              metadata: {
+                donation_type: "gaza_support_anonymous",
+                source: "website",
+                recaptcha_token: recaptchaToken,
+              },
+            }
+          : {
+              name: donorInfo.name,
+              email:
+                donorInfo.email ||
+                `${donorInfo.name
+                  .replace(/\s+/g, "_")
+                  .toLowerCase()}_${Date.now()}@oulama19-foundation.online`,
+              phone: donorInfo.phone || undefined,
+              address: {
+                country: "DZ",
+                state: "Gaza",
+                address: "Palestine",
+              },
+              metadata: {
+                donation_type: "gaza_support",
+                source: "website",
+                recaptcha_token: recaptchaToken,
+                has_email: donorInfo.email ? "true" : "false",
+              },
+            };
+
+      const customer = await client.createCustomer(customerData);
 
       // Create product for donation
       const product = await client.createProduct({
@@ -123,11 +154,25 @@ const DonationSection: React.FC = () => {
         locale: "ar",
         pass_fees_to_customer: false,
         metadata: {
-          donor_name: donorInfo.name,
-          donor_email: donorInfo.email,
+          donor_name:
+            donationType === "anonymous" ? "متبرع مجهول" : donorInfo.name,
+          donor_email:
+            donationType === "anonymous"
+              ? "anonymous@oulama19-foundation.online"
+              : donorInfo.email ||
+                `${donorInfo.name
+                  .replace(/\s+/g, "_")
+                  .toLowerCase()}_noemail@oulama19-foundation.online`,
           donation_amount: amount.toString(),
           campaign: "gaza_website_donation",
           purpose: "humanitarian_aid_gaza",
+          donation_type: donationType,
+          has_email:
+            donationType === "anonymous"
+              ? "anonymous"
+              : donorInfo.email
+              ? "true"
+              : "false",
           recaptcha_token: recaptchaToken,
         },
       });
@@ -154,27 +199,27 @@ const DonationSection: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
           {/* Section Header */}
-            <motion.div
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
             className="text-center mb-16"
-            >
+          >
             <motion.div
               animate={{
-              scale: [1, 1.1, 1],
+                scale: [1, 1.1, 1],
               }}
               transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
               }}
               className="inline-block"
             >
               <Heart
-              className="h-16 w-16 text-rose-500 mx-auto mb-6"
-              fill="currentColor"
+                className="h-16 w-16 text-rose-500 mx-auto mb-6"
+                fill="currentColor"
               />
             </motion.div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
@@ -184,7 +229,7 @@ const DonationSection: React.FC = () => {
               كرمك يمكن أن يغير الحياة. كل تبرع، مهما كان حجمه، يساعدنا في
               مواصلة مهمتنا لتقديم الأمل والدعم لأهلنا في غزة.
             </p>
-            </motion.div>
+          </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Donation Form */}
@@ -243,86 +288,141 @@ const DonationSection: React.FC = () => {
                 )}
               </div>
 
-              {/* Donor Information */}
-              <div className="space-y-4 mb-6">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    الإسم الكامل *
-                  </label>
-                  <input
-                    type="text"
-                    value={donorInfo.name}
-                    onChange={(e) =>
-                      setDonorInfo({ ...donorInfo, name: e.target.value })
-                    }
-                    placeholder="اسمكم الكامل"
-                    className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none focus:bg-gray-800/70"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    البريد الإلكتروني *
-                  </label>
-                  <input
-                    type="email"
-                    value={donorInfo.email}
-                    onChange={(e) =>
-                      setDonorInfo({ ...donorInfo, email: e.target.value })
-                    }
-                    placeholder="البريد.الإلكتروني@example.com"
-                    className={`w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border transition-colors ${
-                      donorInfo.email &&
-                      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(donorInfo.email)
-                        ? "border-rose-500 focus:border-rose-500"
-                        : "border-gray-600 focus:border-green-500"
-                    } focus:outline-none focus:bg-gray-800/70`}
-                  />
-                  {donorInfo.email &&
-                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(donorInfo.email) && (
-                      <p className="text-red-500 text-sm mt-2">
-                        الرجاء إدخال بريد إلكتروني صحيح.
-                      </p>
-                    )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    الهاتف (اختياري)
-                  </label>
-                  <input
-                    type="tel"
-                    value={donorInfo.phone}
-                    onChange={(e) =>
-                      setDonorInfo({ ...donorInfo, phone: e.target.value })
-                    }
-                    placeholder="+213xxxxxxxxx مثال: "
-                    className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none focus:bg-gray-800/70"
-                  />
+              {/* Donation Type Selection */}
+              <div className="mb-6">
+                <h4 className="text-lg font-semibold mb-4">نوع التبرع</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setDonationType("anonymous")}
+                    className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                      donationType === "anonymous"
+                        ? "border-rose-500 bg-rose-500/20 text-white"
+                        : "border-gray-600 bg-gray-800/30 text-gray-300 hover:border-gray-500"
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className="text-lg font-semibold">
+                        تبرع بهوية مجهولة
+                      </div>
+                      <div className="text-sm mt-1">تبرع بدون كشف الهوية</div>
+                    </div>
+                  </motion.button>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setDonationType("with-credentials")}
+                    className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                      donationType === "with-credentials"
+                        ? "border-rose-500 bg-rose-500/20 text-white"
+                        : "border-gray-600 bg-gray-800/30 text-gray-300 hover:border-gray-500"
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className="text-lg font-semibold">
+                        أدخل بياناتك للتبرع
+                      </div>
+                      <div className="text-sm mt-1">تبرع مع كشف الهوية</div>
+                    </div>
+                  </motion.button>
                 </div>
               </div>
 
-                {/* Donate Button */}
-                <motion.button
+              {/* Donor Information */}
+              {donationType === "with-credentials" && (
+                <div className="space-y-4 mb-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      الإسم الكامل *
+                    </label>
+                    <input
+                      type="text"
+                      value={donorInfo.name}
+                      onChange={(e) =>
+                        setDonorInfo({ ...donorInfo, name: e.target.value })
+                      }
+                      placeholder="اسمكم الكامل"
+                      className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none focus:bg-gray-800/70"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      البريد الإلكتروني (اختياري)
+                    </label>
+                    <input
+                      type="email"
+                      value={donorInfo.email}
+                      onChange={(e) =>
+                        setDonorInfo({ ...donorInfo, email: e.target.value })
+                      }
+                      placeholder="البريد.الإلكتروني@example.com (اختياري)"
+                      className={`w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border transition-colors ${
+                        donorInfo.email &&
+                        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(donorInfo.email)
+                          ? "border-rose-500 focus:border-rose-500"
+                          : "border-gray-600 focus:border-green-500"
+                      } focus:outline-none focus:bg-gray-800/70`}
+                    />
+                    {donorInfo.email &&
+                      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(donorInfo.email) && (
+                        <p className="text-red-500 text-sm mt-2">
+                          الرجاء إدخال بريد إلكتروني صحيح.
+                        </p>
+                      )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      الهاتف (اختياري)
+                    </label>
+                    <input
+                      type="tel"
+                      value={donorInfo.phone}
+                      onChange={(e) =>
+                        setDonorInfo({ ...donorInfo, phone: e.target.value })
+                      }
+                      placeholder="+213xxxxxxxxx مثال: "
+                      className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none focus:bg-gray-800/70"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Anonymous donation message */}
+              {donationType === "anonymous" && (
+                <div className="mb-6 p-4 bg-blue-500/20 rounded-xl border border-blue-500/30">
+                  <p className="text-blue-200 text-sm text-center">
+                    ✓ تم اختيار التبرع المجهول. لن يتم حفظ أي بيانات شخصية.
+                  </p>
+                </div>
+              )}
+
+              {/* Donate Button */}
+              <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleDonation}
                 disabled={
                   isLoading ||
                   getCurrentAmount() < 500 ||
-                  !donorInfo.name ||
-                  !donorInfo.email ||
-                  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(donorInfo.email)
+                  !donationType ||
+                  (donationType === "with-credentials" &&
+                    (!donorInfo.name ||
+                      (donorInfo.email !== "" &&
+                        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(donorInfo.email))))
                 }
                 className="w-full bg-gradient-to-r from-rose-500 to-pink-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 space-x-reverse"
-                >
+              >
                 {isLoading ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
                   <>
-                  <Heart className="h-5 w-5" fill="currentColor" />
-                  <span>تبرع {getCurrentAmount() || 0} دج</span>
+                    <Heart className="h-5 w-5" fill="currentColor" />
+                    <span>تبرع {getCurrentAmount() || 0} دج</span>
                   </>
                 )}
-                </motion.button>
+              </motion.button>
 
               {/* Security Notice */}
               <div className="mt-4 flex items-center text-sm text-gray-300 space-x-reverse">

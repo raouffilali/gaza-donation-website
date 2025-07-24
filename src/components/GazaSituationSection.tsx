@@ -36,44 +36,6 @@ const GazaSituationSection: React.FC = () => {
       date: "2025-07-20",
     },
     {
-      id: "3",
-      type: "image",
-      url: "https://www.aljazeera.com/wp-content/uploads/2024/02/image-1707423621.jpg?resize=1800%2C1063",
-      title: "دمار يروي قصة صمود",
-      description:
-        "خلف كل مبنى مدمر، قصة منزل وعائلة وذكريات دُفنت تحت الأنقاض. حجم الدمار هائل، ورحلة إعادة بناء الأرواح، وليس فقط المباني، طويلة وشاقة.",
-      date: "2024-01-12",
-    },
-    {
-      id: "4",
-      type: "video",
-      url: "https://www.youtube.com/embed/zTC8583BRM4",
-      thumbnail: "https://img.youtube.com/vi/zTC8583BRM4/maxresdefault.jpg",
-      title: "يحمل وعاءً فارغاً ويبكي لأجل الطعام",
-      description:
-        "والله لا يوجد شيء نطعمك إياه.. فلسطيني يوثق لحظة مؤلمة لطفله وهو يحمل وعاءً فارغاً ويبكي طالباً الطعام وسط تفاقم الجوع على المحاصرين في قطاع غزة.",
-      date: "2025-07-23",
-    },
-    {
-      id: "5",
-      type: "video",
-      url: "https://www.youtube.com/embed/lnAOJghhawU",
-      thumbnail: "https://img.youtube.com/vi/lnAOJghhawU/maxresdefault.jpg",
-      title: " الموت جوعا أو الموت قصفا, هذه هي غزة ",
-      description:
-        "نقص حاد في الغذاء والدواء، معاناة يومية لأهل غزة. هذا الفيديو يسلط الضوء على الأوضاع الإنسانية الصعبة التي يعيشها الناس، ويظهر كيف أن كل لحظة من حياتهم مليئة بالتحديات والأمل في غدٍ أفضل.",
-      date: "2024-01-08",
-    },
-    {
-      id: "6",
-      type: "image",
-      url: "https://img.youtube.com/vi/lQGHxfvtkss/maxresdefault.jpg",
-      title: "  تجويع قاتل يتواصل في غزة",
-      description:
-        "الحصار المستمر يترك غزة في حالة من الجوع والفقر. هذه الصورة تبرز الأطفال الذين يعانون من نقص التغذية، حيث لا يستطيعون الحصول على ما يكفي من الطعام أو الرعاية الصحية الأساسية.",
-      date: "2025-05-02",
-    },
-    {
       id: "7",
       type: "video",
       url: "https://www.youtube.com/embed/qRqzrrWGbrg",
@@ -83,25 +45,7 @@ const GazaSituationSection: React.FC = () => {
         "ساعات  صعبة يعيشها سكان غزة، مع اشتداد أزمة الجوع.لا تكاد تمضي ساعة حتى يضاف إلى لائحة القتل اليومي رضيعٌ أو طفل أو امرأة أو رجل افترسهُ ألم الأمعاء الخاوية، لأنّ الاحتلال ووراءَه الصمت الدوليّ قررا أن ذلك مصيرٌ يستحقّه سكان غزة.غزة.. تحذيرات من موت جماعي بسبب الجوع",
       date: "2025-07-20",
     },
-    {
-      id: "8",
-      type: "video",
-      url: "https://www.youtube.com/embed/uxtloMX3a9I",
-      thumbnail: "https://img.youtube.com/vi/uxtloMX3a9I/maxresdefault.jpg",
-      title: "مشاهد من قلب المعاناة في غزة",
-      description:
-        "الجوع يشتد في غزة.. طفل يبحث عن بقايا الطعام داخل قدر فارغ ⁣",
-      date: "2025-04-27",
-    },
-    {
-      id: "9",
-      type: "video",
-      url: "https://www.youtube.com/embed/WCl0ncG7DMU",
-      thumbnail: "https://img.youtube.com/vi/sLjaABXBGCc/maxresdefault.jpg",
-      title: "مشاهد من قلب المعاناة في غزة",
-      description: "الجوع يشتد في غزة..  ⁣",
-      date: "2025-04-27",
-    },
+
   ];
 
   const openMedia = (media: MediaItem) => {

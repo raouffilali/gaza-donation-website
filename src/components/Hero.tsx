@@ -34,8 +34,6 @@ const Hero: React.FC = () => {
           animate={{ scale: 1.1, x: [-50, 50, -50] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         />
-
-
       </div>
 
       {/* Gradient Overlay */}
@@ -189,7 +187,7 @@ const Hero: React.FC = () => {
           className="absolute  left-1/2 transform -translate-x-1/2"
         >
           <motion.button
-            onClick={() => scrollToSection("gaza-situation")}
+            onClick={() => scrollToSection("donate")}
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
             className="text-white hover:text-yellow-300 transition-colors"

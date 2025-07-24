@@ -37,8 +37,8 @@ function App() {
       <div className="w-full">
         <Header />
         <Hero />
-        <GazaSituationSection />
         <DonationSection />
+        <GazaSituationSection />
         <AboutSection />
         <ImpactSection />
         <ContactSection />
