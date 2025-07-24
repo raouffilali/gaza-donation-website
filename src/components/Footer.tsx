@@ -204,7 +204,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-400 hover:text-rose-500 transition-colors"
                 >
-                  شروط الخدمة
+                  شروط الخدمة 
                 </a>
               </div>
             </div>
