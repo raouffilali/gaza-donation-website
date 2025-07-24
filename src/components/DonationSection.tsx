@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Heart, CreditCard, Shield, Users } from "lucide-react";
+import { Heart, CreditCard, Shield, Users, Info, X } from "lucide-react";
 import { ChargilyClient } from "@chargily/chargily-pay";
 import toast from "react-hot-toast";
 import { useRecaptcha } from "../hooks/useRecaptcha";
@@ -17,6 +17,7 @@ const DonationSection: React.FC = () => {
   const [donationType, setDonationType] = useState<
     "anonymous" | "with-credentials" | null
   >(null);
+  const [isVideoDialogOpen, setIsVideoDialogOpen] = useState(false);
   const { executeRecaptcha } = useRecaptcha();
 
   const predefinedAmounts = [
@@ -225,10 +226,38 @@ const DonationSection: React.FC = () => {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
               ادعم <span className="text-rose-500">غزة</span>
             </h2>
-            <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8">
               كرمك يمكن أن يغير الحياة. كل تبرع، مهما كان حجمه، يساعدنا في
               مواصلة مهمتنا لتقديم الأمل والدعم لأهلنا في غزة.
             </p>
+
+            {/* How to Use Button */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsVideoDialogOpen(true)}
+              className="relative inline-flex items-center px-8 py-3 rounded-full font-semibold text-white overflow-hidden group transition-all duration-300 hover:shadow-2xl"
+              style={{
+                background:
+                  "linear-gradient(45deg, #f43f5e, #ec4899, #8b5cf6, #3b82f6)",
+                backgroundSize: "400% 400%",
+                animation: "gradientShift 5s ease infinite",
+              }}
+            >
+              <Info className="h-5 w-5  text-white animate-pulse" />
+              <span className="relative z-10 mr-2 ">
+                كيفية استخدام المنصة للتبرع
+              </span>
+
+              {/* Animated gradient overlay */}
+              <motion.div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background:
+                    "linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1))",
+                }}
+              />
+            </motion.button>
           </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
@@ -248,19 +277,19 @@ const DonationSection: React.FC = () => {
               {/* Predefined Amounts */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
                 {predefinedAmounts.map((amount) => (
-                    <motion.button
+                  <motion.button
                     key={amount}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleAmountSelect(amount)}
                     className={`p-3 rounded-xl font-semibold transition-all ${
                       selectedAmount === amount
-                      ? "bg-rose-500 text-white shadow-lg"
-                      : "bg-white/20 text-white hover:bg-white/30"
+                        ? "bg-rose-500 text-white shadow-lg"
+                        : "bg-white/20 text-white hover:bg-white/30"
                     }`}
-                    >
+                  >
                     {amount.toLocaleString()} دج
-                    </motion.button>
+                  </motion.button>
                 ))}
               </div>
 
@@ -419,7 +448,9 @@ const DonationSection: React.FC = () => {
                 ) : (
                   <>
                     <Heart className="h-5 w-5" fill="currentColor" />
-                    <span>تبرع {getCurrentAmount().toLocaleString() || 0} دج</span>
+                    <span>
+                      تبرع {getCurrentAmount().toLocaleString() || 0} دج
+                    </span>
                   </>
                 )}
               </motion.button>
@@ -488,6 +519,52 @@ const DonationSection: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Video Tutorial Dialog */}
+      {isVideoDialogOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setIsVideoDialogOpen(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b">
+              <h3 className="text-xl font-bold text-gray-800 text-right flex-1">
+                كيفية استخدام منصة التبرع
+              </h3>
+              <button
+                onClick={() => setIsVideoDialogOpen(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors p-2 hover:bg-gray-100 rounded-full"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              <div className="aspect-video mb-4">
+                {/* Replace this YouTube URL with your actual tutorial video */}
+                <iframe
+                  src="https://www.youtube.com/embed/Y3JK6oFBoiU"
+                  title="كيفية استخدام منصة التبرع"
+                  className="w-full h-full rounded-lg"
+                  allowFullScreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                ></iframe>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </section>
   );
 };
