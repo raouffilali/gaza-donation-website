@@ -120,7 +120,7 @@ const DonationSection: React.FC = () => {
       // Create product for donation
       const product = await client.createProduct({
         name: "تبرع لدعم غزة",
-        description: `تبرع سخي بقيمة ${amount} دج لدعم مهمتنا الإنسانية في غزة`,
+        description: `تبرع  بقيمة ${amount} دج لدعم مهمتنا الإنسانية في غزة`,
         metadata: {
           type: "gaza_donation",
           amount: amount.toString(),
